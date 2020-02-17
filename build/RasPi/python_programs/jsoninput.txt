@@ -1,0 +1,2 @@
+{"time": "20:56:31", "device": "esp32", "sensor": "temperature2" ,"value": 70}
+

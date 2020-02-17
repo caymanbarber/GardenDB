@@ -11,7 +11,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
         newbody=body.decode("utf-8")
-        HandleInput.writeJSONCSV(newbody,"CSV_Data_test")
+        data_processor.writeJSONCSV(newbody,"CSV_Data_test.csv")
         self.send_response(200)
         self.end_headers()
         response = BytesIO()
