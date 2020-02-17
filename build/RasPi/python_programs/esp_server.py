@@ -1,22 +1,25 @@
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from io import BytesIO
-##from tbd_change_csv_file import tbd_classs
+import socketserver
+
+import data_processor
+
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
-        print(body)
-        #send body to parser in tbd class
+        newbody=body.decode("utf-8")
+        HandleInput.writeJSONCSV(newbody,"CSV_Data_test")
         self.send_response(200)
         self.end_headers()
         response = BytesIO()
-        response.write(b'Post request recieved ')
+        response.write(b'Post recieved')
         self.wfile.write(response.getvalue())
-        #print(self.rfile.read(content_length))
-
-
 
 httpd = ThreadingHTTPServer(("localhost", 8000), SimpleHTTPRequestHandler)
-httpd.serve_forever()
+try:
+    httpd.serve_forever()
+except:
+    print("Server shut down\n")
