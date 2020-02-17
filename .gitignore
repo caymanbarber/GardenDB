@@ -1,3 +1,4 @@
 *.swp
+*.DS_Store
 *.csv
 !build/RasPi/collected_data/*.csv
