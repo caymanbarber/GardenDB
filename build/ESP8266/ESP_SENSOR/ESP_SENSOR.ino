@@ -72,13 +72,21 @@ int connect() {
 
     //send post request
     HTTPClient http;
+
+
+
     char output[128];
-
+    int httpResponseCode;
     for ( int i = 0; i < SENSOR_COUNT; i++) {
+        http.begin(HOST_ADDR);
         http.addHeader("Content-Type", "application/json");
-
-        int httpResponseCode = http.PUT(getSensorData(i));
+        httpResponseCode = http.PUT(getSensorData(i));
+        Serial.println(httpResponseCode);
+        Serial.println("\n");
+        http.end();
     }
+
+
 
 
 }
@@ -115,9 +123,22 @@ char *getSensorData(int index) {
 
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
+    Serial.setTimeout(2000);
+
+    // Wait for serial to initialize.
+    while (!Serial) { }
+
+    Serial.println("Device Started");
+    Serial.println("-------------------------------------");
+    Serial.println("Running Sensor Firmware!");
+    Serial.println("-------------------------------------");
+
     DHT.begin();
+
     conect();
+
+    ESP.deepSleep(30e6);
 }
 
 
