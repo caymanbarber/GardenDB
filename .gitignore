@@ -2,3 +2,5 @@
 *.DS_Store
 *.csv
 !build/RasPi/collected_data/*.csv
+ESP_SENSOR_test/
+.DS_Store
