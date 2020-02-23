@@ -9,7 +9,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
+        #print(body) #maybe add for debug
         newbody=body.decode("utf-8")
+        #print(newbody)
         data_processor.writeJSONCSV(newbody,"CSV_Data_test.csv")
         self.send_response(200)
         self.end_headers()
@@ -20,6 +22,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 class myServer(ThreadingHTTPServer):
     def startMyServer(self):
         try:
+            data_processor.logError("Start Server", "Attempting to start server")
             self.serve_forever()
         except KeyboardInterrupt:
             data_processor.logError("KeyboardInterrupt", "Shut server down manually")

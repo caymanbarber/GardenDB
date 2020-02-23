@@ -1,7 +1,2 @@
 Error for python sever below
-2020-02-17 14:25:11.217217 error: KeyboardInterrupt context: Shut server down manually2020-02-17 14:44:04.734030 error: KeyboardInterrupt context: Shut server down manually
-2020-02-17 14:53:29.091626 error: KeyboardInterrupt context: Shut server down manually
-2020-02-17 14:58:51.158576 error: KeyboardInterrupt context: Shut server down manually
-2020-02-17 15:00:26.463497 error: KeyboardInterrupt context: Shut server down manually
-2020-02-17 15:03:22.973688 error: KeyboardInterrupt context: Shut server down manually
-2020-02-17 15:04:18.605270 error: KeyboardInterrupt context: Shut server down manually
+2020-02-22 16:02:56.013142 error: KeyboardInterrupt context: Shut server down manually

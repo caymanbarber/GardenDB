@@ -29,7 +29,7 @@ def writeJSONCSV(inputStr,CSVFile):
             exit()
 
 def JSONtoCSV(jsonData):    #turn string JSON to text to print to csv file
-    csvOut = jsonData["time"] + ", " + jsonData["device"] + ", " +  jsonData["sensor"] + ", " + str(jsonData["value"])
+    csvOut = str(datetime.datetime.now()) + ", " + jsonData["device"] + ", " +  jsonData["sensor"] + ", " + str(jsonData["value"])
     return csvOut
 
 def logError(e, context):   #given error and context save errors to file

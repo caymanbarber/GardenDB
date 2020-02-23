@@ -1,34 +1,29 @@
 #include <ESP8266WiFi.h>        // Include the Wi-Fi library
 #include <ESP8266HTTPClient.h>  // Include the HTTP client library
 #include <string.h>
-#include <dht.h>
-#include <ArduinoJSON.h>
+#include "DHT.h"
+#include <ArduinoJson.h>
 
-#define SSID "your-ssid"
-#define PSWD  "your-password"
-#define DEVICE_NAME "devicename"
-#define HTTP_PORT 80
-#define HOST_ADDR "host-address"
+#define SSID "wifi name"
+#define PSWD "wifi password"
+#define DEVICE_NAME "esp1"
+#define HTTP_PORT 8000
+#define HOST_IP "hostIP"
+#define HTTP_ADDR "http://hostIP:8000"
 
-#define TEMP 1 //add additional later
+#define TEMP 1 //add additional when using more sensors
 #define H2O 2
 #define HUMI 3
 
 #define SENSOR_COUNT 5 //Adjust as nessicary
 #define DHT11_1PIN 7    //Add more if needed
 
+//DHT dht(DHT11_1PIN, DHT11);   //initializes
 
-
-typedef enum connectionErrorCode{WifiCode, HostCode}Code;
-
+typedef enum connectionErrorCode{WifiCode, HostCode}Code;   //add more for error handling
 const char *sensorName[SENSOR_COUNT] = {"Temp1", "Humidity1", "Moisture2in", "Moisture4in", "Moisture6in"}; //Add names of sensors here. Helpful to include depth
-
 const unsigned char sensorType[SENSOR_COUNT] = {TEMP, HUMI, H2O, H2O, H2O}; //Add corresponding sensor types to names
-
 const int capacity = JSON_OBJECT_SIZE(SENSOR_COUNT);
-
-
-dht DHT;
 
 
 int connect() {
@@ -65,7 +60,7 @@ int connect() {
 
     WiFiClient client;
 
-    if (!client.connect(HOST_ADDR,HTTP_PORT)) {
+    if (!client.connect(HOST_IP,HTTP_PORT)) {
         Serial.println("connection failed");
         return (int)HostCode; //connection to host failed
     }
@@ -73,50 +68,49 @@ int connect() {
     //send post request
     HTTPClient http;
 
-
-
-    char output[128];
     int httpResponseCode;
+
     for ( int i = 0; i < SENSOR_COUNT; i++) {
-        http.begin(HOST_ADDR);
-        http.addHeader("Content-Type", "application/json");
-        httpResponseCode = http.PUT(getSensorData(i));
+        http.begin(HTTP_ADDR);  //create http post request
+        http.addHeader("Content-Type", "application/json"); //add additional headers
+        httpResponseCode = http.POST(getSensorData(i));
+
+        Serial.println("Response Code: ");
         Serial.println(httpResponseCode);
-        Serial.println("\n");
         http.end();
     }
-
-
-
-
 }
 
 
 float sampleSensor(int sensor) {  //depends on whats connected
-    switch(sensor) {
+    switch(sensor) {    //add when
         case TEMP:
-            return readTemperature();
+            return (float)70.2; //for testing
+            //return readTemperature();
             break;
-        case H20:
+        case H2O:
+            return (float)15.7; //for testing
             //use AD thing
             break;
         case HUMI:
-            return readHumidity();
+            return (float)12.4; //for testing
+            //return readHumidity();
             break;
     }
 }
 
 
-char *getSensorData(int index) {
+String getSensorData(int index) {
     StaticJsonDocument<capacity> JSONdoc;
-    char output[128];
+    String output;
 
-    JSONdoc["device"]=DEVICE_NAME;
-    JSONdoc["sensor"]=sensorName[index];
-    JSONdoc["value"]=sampleSensor(sensorType[index]);
+    JSONdoc["device"]=String(DEVICE_NAME);
+    JSONdoc["sensor"]=String(sensorName[index]);
+    JSONdoc["value"]=String(sampleSensor(sensorType[index]));
 
-    serializeJSON(JSONdoc, Serial);
-    serializeJSON(JSONdoc,output);
+    serializeJson(JSONdoc, Serial);
+    Serial.println("");
+    serializeJson(JSONdoc,output);
 
     return output;
 }
@@ -134,15 +128,15 @@ void setup() {
     Serial.println("Running Sensor Firmware!");
     Serial.println("-------------------------------------");
 
-    DHT.begin();
+    //DHT.begin();
 
-    conect();
+    connect();
 
-    ESP.deepSleep(30e6);
+    Serial.println("gong to sleep\n");
+    ESP.deepSleep(30e6); //30 sec, change to 10 mins or hour
+    Serial.println("slept\n");
 }
 
 
 
-void loop() {
-
-}
+void loop() {}
